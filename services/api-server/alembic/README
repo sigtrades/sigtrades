@@ -1,0 +1,14 @@
+# Alembic migrations (api-server)
+
+Fresh installs still use `create_all` + `seed.py` on startup. Use Alembic when you need incremental schema changes in production.
+
+```bash
+cd services/api-server
+export DATABASE_URL=postgresql+asyncpg://sigtrades:sigtrades@localhost:5432/sigtrades
+
+# autogenerate from models (review before applying)
+alembic revision --autogenerate -m "describe change"
+
+# apply
+alembic upgrade head
+```

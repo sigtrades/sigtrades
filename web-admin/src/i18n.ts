@@ -1,0 +1,108 @@
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+
+const resources = {
+  en: {
+    translation: {
+      title: "SigTrades Admin",
+      timezoneEt: "All times in US Eastern (ET)",
+      token: "Admin token",
+      saveToken: "Save token",
+      refresh: "Refresh",
+      loadHint: "Click Refresh to load data",
+      error: "Request failed — check ADMIN_TOKEN",
+      tabs: {
+        users: "Users",
+        plans: "Plans",
+        sources: "Sources",
+        executions: "Executions",
+        subscriptions: "Subscriptions",
+        agents: "Agents",
+        discord: "Discord audit",
+        inbound: "Inbox",
+      },
+      upsertPlan: "Upsert plan",
+      deletePlan: "Delete plan",
+      createSource: "Create platform source",
+      deactivateSource: "Deactivate source",
+      grantSub: "Grant subscription",
+      users: {
+        geoTitle: "Users by country",
+        geoSummary: "{{total}} users · {{unknown}} unknown geo · {{fallback}} fallback to last login",
+        email: "Email",
+        regCountry: "Registration",
+        lastLogin: "Last login",
+        provider: "Provider",
+        verified: "Verified",
+        empty: "No users",
+      },
+      inbound: {
+        title: "Inbox",
+        empty: "No messages",
+        selectHint: "Select a message",
+        reply: "Send reply",
+        replyPlaceholder: "Reply text…",
+        replied: "Reply sent",
+        prev: "Prev",
+        next: "Next",
+        attachments: "Attachments",
+      },
+    },
+  },
+  zh: {
+    translation: {
+      title: "SigTrades 后台",
+      timezoneEt: "所有时间均为美东时间 (ET)",
+      token: "Admin Token",
+      saveToken: "保存 Token",
+      refresh: "刷新",
+      loadHint: "点击刷新加载数据",
+      error: "请求失败 — 请检查 ADMIN_TOKEN",
+      tabs: {
+        users: "用户",
+        plans: "会员计划",
+        sources: "信号源",
+        executions: "执行记录",
+        subscriptions: "订阅",
+        agents: "Agent 连接",
+        discord: "Discord 审核",
+        inbound: "收件箱",
+      },
+      upsertPlan: "保存计划",
+      deletePlan: "删除计划",
+      createSource: "创建平台信号源",
+      deactivateSource: "停用信号源",
+      grantSub: "授予订阅",
+      users: {
+        geoTitle: "用户国家分布",
+        geoSummary: "共 {{total}} 用户 · {{unknown}} 无国家 · {{fallback}} 回退最近登录地",
+        email: "邮箱",
+        regCountry: "注册地",
+        lastLogin: "最近登录",
+        provider: "注册方式",
+        verified: "邮箱验证",
+        empty: "暂无用户",
+      },
+      inbound: {
+        title: "收件箱",
+        empty: "暂无邮件",
+        selectHint: "请选择一封邮件",
+        reply: "发送回复",
+        replyPlaceholder: "回复内容…",
+        replied: "回复已发送",
+        prev: "上一页",
+        next: "下一页",
+        attachments: "附件",
+      },
+    },
+  },
+};
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: localStorage.getItem("admin_lang") || "zh",
+  fallbackLng: "en",
+  interpolation: { escapeValue: false },
+});
+
+export default i18n;

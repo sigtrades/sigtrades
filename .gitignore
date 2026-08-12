@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+*.spec
+
+# Node
+node_modules/
+.vite/
+*.local
+
+# Env：业务/部署 .env 入库，香港机 git pull 即可对齐（勿再 SSH 手改线上 .env）
+# .env.example 仍作模板；私钥文件继续忽略
+!.env
+!.env.example
+*.pem
+*.key
+
+# Data / logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+logs/
+# Agent 安装包：sqdev HTTP 推送限制会 413（单文件 ~60MB 也被拒），勿进 git。
+# 本机打包后请 scp/rsync 到服务器 data/agent-releases/；清单可入库。
+data/agent-releases/*.dmg
+data/agent-releases/*.zip
+data/agent-releases/archive/
+!data/agent-releases/latest-manifest.json
+data/geoip/*.mmdb
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+.cursor/
+
+# Agent local state
+sigtrades-agent-data/

@@ -1,0 +1,42 @@
+{
+  "product": "sigtrades",
+  "schedule_tz": "Asia/Shanghai",
+  "schedule_cron_hint": "5 8 * * *",
+  "keep": 3,
+  "backup_root": "/Users/yangjun/backups/pg/sigtrades",
+  "lock_dir": "/tmp/sigtrades_pg_backup.lock",
+  "hk": {
+    "ssh_host": "ubuntu@100.83.115.61",
+    "pem": "/Users/yangjun/work/data_hub/tools/hk.pem",
+    "connect_timeout_sec": 20
+  },
+  "database": {
+    "container": "sigtrades-postgres-1",
+    "user": "sigtrades",
+    "db": "sigtrades",
+    "dump_mode": "data-only",
+    "tables": [
+      "users",
+      "membership_plans",
+      "user_memberships",
+      "payment_consent_logs",
+      "broker_credentials",
+      "user_broker_bindings",
+      "webhook_ingest_tokens",
+      "user_source_subscriptions",
+      "user_route_rules",
+      "user_parse_rules",
+      "agent_tokens",
+      "promotions",
+      "promotion_redemptions",
+      "user_risk_settings"
+    ]
+  },
+  "alert": {
+    "to": "backup@sigtrades.com",
+    "from_email": "team@sigtrades.com",
+    "from_name": "SigTrades Backup",
+    "resend_api_key": ""
+  },
+  "_comment": "在 mac-mini 上用 cron 跑 scripts/backup/backup_critical.py；香港部署不会自动执行。只备用户/支付/券商绑定等，不含 execution_records。"
+}

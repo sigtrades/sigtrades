@@ -1,0 +1,24 @@
+[project]
+name = "sigtrades-core"
+version = "0.1.0"
+description = "sigtrades shared core: signal models, broker adapters, execution state machine, signal sources"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+tiger = ["tigeropen"]
+longbridge = ["longbridge"]
+ibkr = ["ib_async"]
+futu = ["futu-api>=10.0"]
+schwab = ["httpx>=0.27"]
+alpaca = ["httpx>=0.27"]
+usmart = ["httpx>=0.27", "cryptography>=42.0"]
+ibkr_web = ["httpx>=0.27", "cryptography>=42.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sigtrades_core*"]

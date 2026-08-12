@@ -1,0 +1,12 @@
+# 运行时依赖（开发用；打包见 build/ 脚本）
+websockets>=12.0
+httpx>=0.27.0
+aiohttp>=3.9.0
+pywebview>=5.0
+# 共享包以可编辑方式安装：
+#   pip install -e ../../packages/core -e ../../packages/protocol
+# 券商 SDK（按需）：
+#   pip install ib_async        # IBKR
+#   pip install futu-api        # 富途
+# 托盘（可选）：
+#   pip install pystray Pillow

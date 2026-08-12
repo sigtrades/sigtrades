@@ -1,0 +1,35 @@
+# 本地开发反向代理（TLS 生产环境替换为真实域名 + auto_https）
+:8080 {
+	# API
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy api-server:8000
+	}
+
+	# Resend 入站邮件 Webhook（根路径，不在 /api 下）
+	handle /mail/* {
+		reverse_proxy api-server:8000
+	}
+
+	# Relay Agent WS
+	handle /relay/* {
+		uri strip_prefix /relay
+		reverse_proxy relay-gateway:8000 {
+			transport http {
+				versions 1.1
+			}
+		}
+	}
+
+	# Ingest webhook
+	handle /ingest/* {
+		reverse_proxy ingest:8000
+	}
+
+	# 静态前端（构建产物挂载到 /srv/web，默认 web/dist）
+	handle {
+		root * /srv/web
+		try_files {path} /index.html
+		file_server
+	}
+}

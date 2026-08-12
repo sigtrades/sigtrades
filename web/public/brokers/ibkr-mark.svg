@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.5 0 11.6 18" role="img" aria-labelledby="title">
+  <title id="title">Interactive Brokers</title>
+  <defs>
+    <linearGradient id="ibkr-red" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d81222"/>
+      <stop offset="1" stop-color="#960b1a"/>
+    </linearGradient>
+  </defs>
+  <polygon points=".5 17.46 .5 9.21 8.01 17.46" fill="url(#ibkr-red)"/>
+  <circle cx="6.96" cy="11.22" r="2.25" fill="#d81222"/>
+  <polygon points=".5 9.21 .5 17.46 8.01 .5" fill="#d81222"/>
+</svg>

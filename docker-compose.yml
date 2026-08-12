@@ -1,0 +1,234 @@
+# sigtrades 云端服务编排。
+# 构建上下文为仓库根目录，使各服务 Dockerfile 能 COPY 共享 packages/。
+#   cp .env.example .env   # 填写 FERNET_KEY
+#   docker compose up -d --build
+name: sigtrades
+
+x-python-build-args: &python-build-args
+  PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+  PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST:-}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sigtrades}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sigtrades}
+      POSTGRES_DB: ${POSTGRES_DB:-sigtrades}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # 仅容器内访问；本地调试如需直连可改为 "5433:5432"
+    expose: ["5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sigtrades}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    expose: ["6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api-server:
+    build:
+      context: .
+      dockerfile: services/api-server/Dockerfile
+      args: *python-build-args
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sigtrades}:${POSTGRES_PASSWORD:-sigtrades}@postgres:5432/${POSTGRES_DB:-sigtrades}
+      REDIS_URL: redis://redis:6379/0
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-change-me-internal-secret}
+      JWT_SECRET: ${JWT_SECRET:-change-me-jwt-secret}
+      FERNET_KEY: ${FERNET_KEY:?set FERNET_KEY in .env}
+      APP_ENV: ${APP_ENV:-development}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      AI_CLIENT_MODE: ${AI_CLIENT_MODE:-openai}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_OPENAI_COMPAT_BASE: ${AI_OPENAI_COMPAT_BASE:-https://www.packyapi.com}
+      AI_MODEL: ${AI_MODEL:-gpt-5.4}
+      AI_MAX_TOKENS: ${AI_MAX_TOKENS:-2000}
+      AI_TIMEOUT: ${AI_TIMEOUT:-30}
+      AI_TRANSLATE_TIMEOUT: ${AI_TRANSLATE_TIMEOUT:-30}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev-admin-token-change-me}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      OPERATIONS_USERNAME: ${OPERATIONS_USERNAME:-ops}
+      OPERATIONS_PASSWORD: ${OPERATIONS_PASSWORD:-ops123}
+      OPERATIONS_TOKEN: ${OPERATIONS_TOKEN:-operations-token-change-me}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      RELAY_GATEWAY_URL: http://relay-gateway:8000
+      CLOUD_EXECUTOR_URL: http://cloud-executor:8000
+      INGEST_URL: http://ingest:8000
+      REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-false}
+      FRONTEND_URL: ${FRONTEND_URL:-http://127.0.0.1:5173}
+      RELAY_AGENT_WS_URL: ${RELAY_AGENT_WS_URL:-ws://127.0.0.1:8081/agent/ws}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      DISCORD_APPLICATION_ID: ${DISCORD_APPLICATION_ID:-}
+      DISCORD_OAUTH_REDIRECT_URI: ${DISCORD_OAUTH_REDIRECT_URI:-http://localhost:8080/config/discord/callback}
+      SCHWAB_OAUTH_REDIRECT_URI: ${SCHWAB_OAUTH_REDIRECT_URI:-https://127.0.0.1}
+      NOTIFY_PUSH_WEBHOOK: ${NOTIFY_PUSH_WEBHOOK:-}
+      FCM_PROJECT_ID: ${FCM_PROJECT_ID:-}
+      FCM_CREDENTIALS_JSON: ${FCM_CREDENTIALS_JSON:-}
+      FCM_CREDENTIALS_PATH: ${FCM_CREDENTIALS_PATH:-}
+      FIREBASE_WEB_API_KEY: ${FIREBASE_WEB_API_KEY:-}
+      FIREBASE_MESSAGING_SENDER_ID: ${FIREBASE_MESSAGING_SENDER_ID:-}
+      FIREBASE_WEB_APP_ID: ${FIREBASE_WEB_APP_ID:-}
+      FIREBASE_VAPID_KEY: ${FIREBASE_VAPID_KEY:-}
+      FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:5174,http://localhost:3000}
+      ALLOW_INSECURE_INBOUND_WEBHOOK: ${ALLOW_INSECURE_INBOUND_WEBHOOK:-false}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-noreply@sigtrades.app}
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+      AGENT_LATEST_VERSION: ${AGENT_LATEST_VERSION:-0.1.0}
+      AGENT_DOWNLOAD_URL: ${AGENT_DOWNLOAD_URL:-}
+      AGENT_SHA256: ${AGENT_SHA256:-}
+      AGENT_WINDOWS_LATEST_VERSION: ${AGENT_WINDOWS_LATEST_VERSION:-}
+      AGENT_WINDOWS_DOWNLOAD_URL: ${AGENT_WINDOWS_DOWNLOAD_URL:-}
+      AGENT_WINDOWS_SHA256: ${AGENT_WINDOWS_SHA256:-}
+      AGENT_RELEASES_DIR: /app/data/agent-releases
+      # 后台「加载本地包」拼对外下载 URL（生产设 https://stapi.sigtrades.com/releases）
+      AGENT_RELEASES_PUBLIC_BASE: ${AGENT_RELEASES_PUBLIC_BASE:-http://localhost:8080/releases}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-}
+      RESEND_FROM_NAME: ${RESEND_FROM_NAME:-sigtrades}
+      RESEND_WEBHOOK_SECRET: ${RESEND_WEBHOOK_SECRET:-}
+      GEOIP2_CITY_DB_PATH: ${GEOIP2_CITY_DB_PATH:-/app/data/geoip/GeoLite2-City.mmdb}
+      GEOIP2_COUNTRY_DB_PATH: ${GEOIP2_COUNTRY_DB_PATH:-/app/data/geoip/GeoLite2-Country.mmdb}
+      NO_PROXY: "*"
+    volumes:
+      - ./data/geoip:/app/data/geoip:ro
+      # 需可写：发布时会复制到 archive/ 供历史下载
+      - ./data/agent-releases:/app/data/agent-releases
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports: ["8080:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  relay-gateway:
+    build:
+      context: .
+      dockerfile: services/relay-gateway/Dockerfile
+      args: *python-build-args
+    environment:
+      API_SERVER_URL: http://api-server:8000
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-change-me-internal-secret}
+      DEV_TRUST_TOKEN: "false"
+      NO_PROXY: "*"
+    ports: ["8081:8000"]
+    depends_on:
+      api-server:
+        condition: service_healthy
+
+  cloud-executor:
+    build:
+      context: .
+      dockerfile: services/cloud-executor/Dockerfile
+      args: *python-build-args
+    environment:
+      API_SERVER_URL: http://api-server:8000
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-change-me-internal-secret}
+      FERNET_KEY: ${FERNET_KEY:?set FERNET_KEY in .env}
+      NO_PROXY: "*"
+    depends_on:
+      api-server:
+        condition: service_healthy
+
+  signal-router:
+    build:
+      context: .
+      dockerfile: services/signal-router/Dockerfile
+      args: *python-build-args
+    environment:
+      API_SERVER_URL: http://api-server:8000
+      RELAY_GATEWAY_URL: http://relay-gateway:8000
+      CLOUD_EXECUTOR_URL: http://cloud-executor:8000
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-change-me-internal-secret}
+      DEV_ALLOW_EMBEDDED_PLAN: "false"
+      NO_PROXY: "*"
+    depends_on:
+      api-server:
+        condition: service_healthy
+      relay-gateway:
+        condition: service_started
+      cloud-executor:
+        condition: service_started
+
+  ingest:
+    build:
+      context: .
+      dockerfile: services/ingest/Dockerfile
+      args: *python-build-args
+    environment:
+      API_SERVER_URL: http://api-server:8000
+      SIGNAL_ROUTER_URL: http://signal-router:8000
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-change-me-internal-secret}
+      DISCORD_PUBLIC_KEY: ${DISCORD_PUBLIC_KEY:-}
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_WEBHOOK_SECRET: ${TELEGRAM_WEBHOOK_SECRET:-}
+      TELEGRAM_USE_WEBHOOK: ${TELEGRAM_USE_WEBHOOK:-false}
+      TELEGRAM_WEBHOOK_URL: ${TELEGRAM_WEBHOOK_URL:-}
+      APP_ENV: ${APP_ENV:-development}
+      NO_PROXY: "*"
+    ports: ["8082:8000"]
+    depends_on:
+      api-server:
+        condition: service_healthy
+      signal-router:
+        condition: service_started
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+        VITE_REQUIRE_EMAIL_VERIFICATION: ${REQUIRE_EMAIL_VERIFICATION:-false}
+        VITE_INGEST_PUBLIC_URL: ${INGEST_PUBLIC_URL:-http://localhost:8082}
+    ports: ["5173:80"]
+    depends_on:
+      api-server:
+        condition: service_healthy
+
+  web-admin:
+    build:
+      context: .
+      dockerfile: web-admin/Dockerfile
+    ports: ["5174:80"]
+    depends_on:
+      api-server:
+        condition: service_healthy
+
+  # 可选：单端口统一入口（API + ingest + relay WS + 用户前端静态）
+  caddy:
+    profiles: ["with-proxy"]
+    image: caddy:2-alpine
+    ports: ["80:8080"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./web/dist:/srv/web:ro
+    depends_on:
+      - api-server
+      - relay-gateway
+      - ingest
+
+volumes:
+  pgdata:

@@ -1,0 +1,27 @@
+{
+  "ingest_base": "http://localhost:8082",
+  "webhook_token": "vSHChG3GFARbNJLoP6AfOCHB-Jp7zP95",
+  "default_symbol": "spy",
+  "default_quantity": 1,
+  "expiry": "2026-07-31",
+  "symbols": {
+    "spy": {
+      "underlying": "SPY",
+      "root": "SPY",
+      "asset_class": "EQUITY_OPTIONS",
+      "spot": 680,
+      "width": 1,
+      "limit_price": 0.5,
+      "strike_step": 1
+    },
+    "spx": {
+      "underlying": "SPX",
+      "root": "SPXW",
+      "asset_class": "SPX_OPTIONS",
+      "spot": 7450,
+      "width": 5,
+      "limit_price": 0.85,
+      "strike_step": 5
+    }
+  }
+}

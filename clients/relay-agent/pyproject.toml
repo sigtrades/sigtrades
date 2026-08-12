@@ -1,0 +1,32 @@
+[project]
+name = "sigtrades-agent"
+version = "0.1.11"
+description = "sigtrades desktop Relay Agent (Mac/Windows)"
+requires-python = ">=3.11"
+dependencies = [
+    "websockets>=12.0",
+    "httpx>=0.27.0",
+    "aiohttp>=3.9.0",
+    "pywebview>=5.0",
+    "pystray>=0.19",
+    "Pillow>=10.0",
+    "sigtrades-core",
+    "sigtrades-protocol",
+]
+
+[project.optional-dependencies]
+ibkr = ["ib_async"]
+futu = ["futu-api>=10.0"]
+tray = ["pystray", "Pillow"]
+desktop = ["pywebview>=5.0"]
+
+[project.scripts]
+sigtrades-agent = "sigtrades_agent.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sigtrades_agent*"]

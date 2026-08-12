@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-slate-900;
+  }
+}
+
+@layer components {
+  /* 卡片 */
+  .card {
+    @apply rounded-2xl border border-slate-200/90 bg-white p-4 shadow-card sm:p-6;
+  }
+  .card-interactive {
+    @apply rounded-2xl border border-slate-200/90 bg-white p-4 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-pop sm:p-6;
+  }
+  .kpi-card {
+    @apply rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card transition-all duration-200 hover:border-brand-200 hover:shadow-pop sm:p-5;
+  }
+  .section-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.16em] text-brand-600;
+  }
+
+  /* 按钮 */
+  .btn-primary {
+    @apply inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:py-2;
+  }
+  .btn-secondary {
+    @apply inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 transition-colors hover:border-brand-300 hover:bg-brand-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:py-2;
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 sm:min-h-0 sm:py-1.5;
+  }
+  .btn-danger {
+    @apply inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-loss px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-loss sm:min-h-0 sm:py-2;
+  }
+
+  /* 表单 */
+  .input,
+  .select,
+  .textarea {
+    @apply min-h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 sm:min-h-0 sm:py-2 sm:text-sm;
+  }
+
+  /* 文字 / 徽章 / 代码块 */
+  .muted {
+    @apply text-slate-500;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .badge-neutral {
+    @apply badge bg-slate-100 text-slate-600;
+  }
+  .badge-success {
+    @apply badge bg-profit-soft text-profit;
+  }
+  .badge-danger {
+    @apply badge bg-loss-soft text-loss;
+  }
+  .code-block {
+    @apply overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700;
+  }
+
+  .toggle {
+    @apply relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500;
+  }
+  .toggle-thumb {
+    @apply pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200;
+  }
+}

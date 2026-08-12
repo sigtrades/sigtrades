@@ -1,0 +1,26 @@
+{
+  "version": "0.1.11",
+  "updated_at": "2026-08-08T05:11:05Z",
+  "platforms": {
+    "macos": {
+      "platform": "macos",
+      "version": "0.1.11",
+      "filename": "sigtrades-agent-macos-v0.1.11.dmg",
+      "path": "/Users/yangjun/work/sigtrades/data/agent-releases/sigtrades-agent-macos-v0.1.11.dmg",
+      "download_url": "https://stapi.sigtrades.com/releases/sigtrades-agent-macos-v0.1.11.dmg",
+      "sha256": "4329b37fbb37abdf1b031d995cd7b406145e055bc2cccdb3dcfe03070e7cb8fa",
+      "size_bytes": 65703409,
+      "built_at": "2026-08-08T04:09:14Z"
+    },
+    "windows": {
+      "platform": "windows",
+      "version": "0.1.11",
+      "filename": "sigtrades-agent-windows-v0.1.11.zip",
+      "path": "/Users/yangjun/work/sigtrades/data/agent-releases/sigtrades-agent-windows-v0.1.11.zip",
+      "download_url": "https://stapi.sigtrades.com/releases/sigtrades-agent-windows-v0.1.11.zip",
+      "sha256": "0d38110ab008e84d6f5e632cecdb3c17316fb4376994b8019f506d33552bae98",
+      "size_bytes": 65047226,
+      "built_at": "2026-08-08T05:11:05Z"
+    }
+  }
+}
